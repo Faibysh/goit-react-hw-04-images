@@ -1,0 +1,24 @@
+img {
+  display: block;
+  object-fit: cover;
+  height: 250px;
+  width: 300px;
+  border: 4px solid #333;
+
+}
+
+
+:root {
+  --timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  --animation-duration: 250ms;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  max-width: 1140px;
+  grid-gap: 80px 40px;
+  margin: 0 auto;
+}

@@ -1,16 +1,20 @@
-export const App = () => {
+import React, { useState } from 'react';
+import SearchBar from './Searchbar';
+import ImageGallery from './ImageGallery/ImageGallery';
+
+function App() {
+  const [imageName, setImageName] = useState('');
+
+  const handleFormSubmit = async name => {
+    setImageName(name);
+  };
+
   return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101'
-      }}
-    >
-      React homework template
-    </div>
+    <>
+      <SearchBar onSubmit={handleFormSubmit} />
+      <ImageGallery imageName={imageName} />
+    </>
   );
-};
+}
+
+export default App;
