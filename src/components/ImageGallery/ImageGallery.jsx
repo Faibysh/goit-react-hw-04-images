@@ -6,7 +6,7 @@ import { PER_PAGE, getImages } from 'services/api/api';
 import styles from './ImageGallery.module.css';
 
 const ImageGallery = ({ imageName }) => {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [images, setImages] = useState([]);
   const [error, setError] = useState(null);
   const [status, setStatus] = useState('idle');
@@ -15,6 +15,22 @@ const ImageGallery = ({ imageName }) => {
   useEffect(() => {
     if (!imageName.length) return;
     setPage(1);
+    const fetchImages = async () => {
+      setStatus('pending');
+      try {
+        await getImages(imageName, 1).then(response => {
+          setImages(response.hits);
+          setIsButtonVisible(
+            response.hits.length && response.totalHits >= PER_PAGE * 1
+          );
+        });
+        setStatus('resolved');
+      } catch (error) {
+        setError(error.message);
+        setStatus('rejected');
+      }
+    };
+    fetchImages();
   }, [imageName]);
 
   const loadMore = async () => {
@@ -22,16 +38,11 @@ const ImageGallery = ({ imageName }) => {
   };
 
   useEffect(() => {
-    if (!imageName.length) return;
+    if (!imageName.length || page === 1) return;
     const fetchImages = async () => {
-      if (page === 1) {
-        setStatus('pending');
-      }
       try {
         await getImages(imageName, page).then(response => {
-          setImages(prevImages =>
-            page === 1 ? [...response.hits] : [...prevImages, ...response.hits]
-          );
+          setImages(prevImages => [...prevImages, ...response.hits]);
           setIsButtonVisible(
             response.hits.length && response.totalHits >= PER_PAGE * page
           );
